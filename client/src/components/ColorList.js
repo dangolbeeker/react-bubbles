@@ -32,7 +32,7 @@ const ColorList = ({ colors, updateColors, getColors }) => {
       .delete(`http://localhost:5000/api/colors/${colorToEdit.id}`)
       .then(res => {
         console.log(res)
-        const newArr = colors.filter(color => color.id != colorToEdit.id)
+        const newArr = colors.filter(color => color.id !== colorToEdit.id)
         updateColors(newArr)
       })
       .catch(err => console.log(err.response))
@@ -44,7 +44,7 @@ const ColorList = ({ colors, updateColors, getColors }) => {
       .put(`http://localhost:5000/api/colors/${colorToEdit.id}`, colorToEdit)
       .then(res => {
         console.log(res.data);
-        updateColors(colors.map(color => color.id != colorToEdit.id ? color : res.data))
+        updateColors(colors.map(color => color.id !== colorToEdit.id ? color : res.data))
         setColorToEdit(initialColor)
         // props.history.push('/bubblepage')
       })
@@ -74,9 +74,13 @@ const ColorList = ({ colors, updateColors, getColors }) => {
       <ul>
         {colors.map(color => (
           <li key={color.color} onClick={() => editColor(color)}>
-            <span>
-              <span className="delete" onClick={(event) => deleteColor(event, color)}>
-                x
+                  <span>
+              <span className="delete" onClick={e => {
+                    e.stopPropagation();
+                    deleteColor(color)
+                  }
+                }>
+                  x
               </span>{" "}
               {color.color}
             </span>
